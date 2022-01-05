@@ -30,7 +30,7 @@ def main(config):
     # get data loder
     train_loader = get_audio_loader(config.data_path,
                                     config.batch_size,
-									split='TRAIN',
+                                    split='TRAIN',
                                     input_length=config.input_length,
                                     num_workers=config.num_workers)
     solver = Solver(train_loader, config)
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_workers', type=int, default=0)
     parser.add_argument('--dataset', type=str, default='mtat', choices=['mtat', 'msd', 'jamendo'])
     parser.add_argument('--model_type', type=str, default='fcn',
-						choices=['fcn', 'musicnn', 'crnn', 'sample', 'se', 'short', 'short_res', 'attention', 'hcnn'])
+                        choices=['fcn', 'musicnn', 'crnn', 'sample', 'se', 'short', 'short_res', 'attention', 'hcnn'])
     parser.add_argument('--n_epochs', type=int, default=200)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--lr', type=float, default=1e-4)

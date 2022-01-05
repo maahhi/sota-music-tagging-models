@@ -20,6 +20,9 @@ from sklearn.preprocessing import LabelBinarizer
 
 import model as Model
 
+torch.cuda.memory_summary(device=None, abbreviated=False)
+
+torch.cuda.empty_cache()
 
 TAGS = ['genre---downtempo', 'genre---ambient', 'genre---rock', 'instrument---synthesizer', 'genre---atmospheric', 'genre---indie', 'instrument---electricpiano', 'genre---newage', 'instrument---strings', 'instrument---drums', 'instrument---drummachine', 'genre---techno', 'instrument---guitar', 'genre---alternative', 'genre---easylistening', 'genre---instrumentalpop', 'genre---chillout', 'genre---metal', 'mood/theme---happy', 'genre---lounge', 'genre---reggae', 'genre---popfolk', 'genre---orchestral', 'instrument---acousticguitar', 'genre---poprock', 'instrument---piano', 'genre---trance', 'genre---dance', 'instrument---electricguitar', 'genre---soundtrack', 'genre---house', 'genre---hiphop', 'genre---classical', 'mood/theme---energetic', 'genre---electronic', 'genre---world', 'genre---experimental', 'instrument---violin', 'genre---folk', 'mood/theme---emotional', 'instrument---voice', 'instrument---keyboard', 'genre---pop', 'instrument---bass', 'instrument---computer', 'mood/theme---film', 'genre---triphop', 'genre---jazz', 'genre---funk', 'mood/theme---relaxing']
 
@@ -107,7 +110,7 @@ class Predict(object):
             self.mlb = LabelBinarizer().fit(TAGS)
 
     def load(self, filename):
-        S = torch.load(filename)
+        S = torch.load(filename,map_location='cpu')
         if 'spec.mel_scale.fb' in S.keys():
             self.model.spec.mel_scale.fb = S['spec.mel_scale.fb']
         self.model.load_state_dict(S)
@@ -157,7 +160,8 @@ class Predict(object):
         reconst_loss = nn.BCELoss()
         for line in tqdm.tqdm(self.test_list):
             if self.dataset == 'mtat':
-                ix, fn = line.split('\t')
+                #print(line.split('\\t'))
+                ix, fn = line.split('\\t')
             elif self.dataset == 'msd':
                 fn = line
                 if fn.decode() in skip_files:
@@ -204,7 +208,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_type', type=str, default='fcn',
                         choices=['fcn', 'musicnn', 'crnn', 'sample', 'se', 'short', 'short_res', 'attention', 'hcnn'])
     parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--model_load_path', type=str, default='.')
+    parser.add_argument('--model_load_path', type=str, default= "../models/mtat/fcn/best_model.pth")#'.')
     parser.add_argument('--data_path', type=str, default='./data')
 
     config = parser.parse_args()

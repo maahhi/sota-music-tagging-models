@@ -17,16 +17,16 @@ class AudioFolder(data.Dataset):
 
     def get_songlist(self):
         if self.split == 'TRAIN':
-            self.fl = np.load('./../split/mtat/train.npy')
+            self.fl = np.load('./../split/mtat/train_sub.npy')
         elif self.split == 'VALID':
-            self.fl = np.load('./../split/mtat/valid.npy')
+            self.fl = np.load('./../split/mtat/valid_sub.npy')
         elif self.split == 'TEST':
-            self.fl = np.load('./../split/mtat/test.npy')
+            self.fl = np.load('./../split/mtat/test_sub.npy')
         else:
             print('Split should be one of [TRAIN, VALID, TEST]')
 
     def get_npy(self, index):
-        ix, fn = self.fl[index].split('\t')
+        ix, fn = self.fl[index].split('\\t')
         npy_path = os.path.join(self.root, 'mtat', 'npy', fn.split('/')[1][:-3]) + 'npy'
         npy = np.load(npy_path, mmap_mode='r')
         random_idx = int(np.floor(np.random.random(1) * (len(npy)-self.input_length)))
